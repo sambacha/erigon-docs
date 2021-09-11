@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Tutorial: Build a personalized daemon</title>
+    
+          <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/debug.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../_static/theme-vendors.js"></script> -->
+      <script src="../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="next" title="StagedSync" href="../stagedsync.html" />
+  <link rel="prev" title="Erigon Types" href="../types.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <span class="site-name">Erigon</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#welcome-to-erigon-s-documentation">welcome to erigon's documentation!</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../installation.html" class="reference internal ">Installation Guide</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../types.html" class="reference internal ">Erigon Types</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">Tutorial: Build a personalized daemon</a>
+            
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#tutorial-build-a-personalized-daemon" class="reference internal">Tutorial: Build a personalized daemon</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../stagedsync.html" class="reference internal ">StagedSync</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../snappy.html" class="reference internal ">Block Bodies Compression: Snappy</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../etl.html" class="reference internal ">ETL</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="index.html" class="reference internal ">RPC Interfaces</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+    <li>Tutorial: Build a personalized daemon</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="../types.html"
+       title="previous chapter">← Erigon Types</a>
+  </li>
+  <li class="next">
+    <a href="../stagedsync.html"
+       title="next chapter">StagedSync →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <div class="section" id="tutorial-build-a-personalized-daemon">
+<h1>Tutorial: Build a personalized daemon<a class="headerlink" href="#tutorial-build-a-personalized-daemon" title="Permalink to this headline">¶</a></h1>
+<p>For the following tutorial, we will make references to <a class="reference external" href="https://github.com/Giulio2002/hello-tg-daemon">https://github.com/Giulio2002/hello-tg-daemon</a>.</p>
+<p>We are going to build our daemon using golang and Erigon packages, so first of all we are going to create a file in which we are going to store our API methods and informations. (<cite>api.go</cite>).</p>
+<p>our daemon will only contain one method: <cite>myNamespace_getBlockNumberByHash</cite> which will return the block number associated to certain hash.</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;context&quot;</span>
+
+    <span class="s">&quot;github.com/ledgerwatch/erigon-lib/kv&quot;</span>
+    <span class="s">&quot;github.com/ledgerwatch/erigon/common&quot;</span>
+    <span class="s">&quot;github.com/ledgerwatch/erigon/core/rawdb&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">type</span> <span class="nx">API</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">db</span> <span class="nx">kv</span><span class="p">.</span><span class="nx">RoDB</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">ExampleAPI</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nx">GetBlockNumberByHash</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">hash</span> <span class="nx">common</span><span class="p">.</span><span class="nx">Hash</span><span class="p">)</span> <span class="p">(</span><span class="kt">uint64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">NewAPI</span><span class="p">(</span><span class="nx">db</span> <span class="nx">kv</span><span class="p">.</span><span class="nx">RoDB</span><span class="p">)</span> <span class="o">*</span><span class="nx">API</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">API</span><span class="p">{</span><span class="nx">db</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">api</span> <span class="o">*</span><span class="nx">API</span><span class="p">)</span> <span class="nx">GetBlockNumberByHash</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">hash</span> <span class="nx">common</span><span class="p">.</span><span class="nx">Hash</span><span class="p">)</span> <span class="p">(</span><span class="kt">uint64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">tx</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">BeginRo</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="nx">tx</span><span class="p">.</span><span class="nx">Rollback</span><span class="p">()</span>
+
+    <span class="nx">block</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">rawdb</span><span class="p">.</span><span class="nx">ReadBlockByHash</span><span class="p">(</span><span class="nx">tx</span><span class="p">,</span> <span class="nx">hash</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">block</span><span class="p">.</span><span class="nx">NumberU64</span><span class="p">(),</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The type <cite>Api</cite> is the type that is going to contain the methods for our custom daemon. This type has one member: <cite>db</cite> object used to interact with the Erigon node remotely. Member <cite>db</cite> behave like normal db object and can be used alongside with the rawdb package.</p>
+<p>In our example we are making an rpcdaemon call that by receiving a certain block hash, it give the block number associated as an output. this is all done in <cite>GetBlockNumberByHash</cite>.</p>
+<p>Now we are going to make our <cite>main.go</cite> where we are going to serve the api we made in <cite>api.go</cite>.</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;os&quot;</span>
+
+    <span class="s">&quot;github.com/ledgerwatch/erigon-lib/kv&quot;</span>
+    <span class="s">&quot;github.com/ledgerwatch/erigon/cmd/rpcdaemon/cli&quot;</span>
+    <span class="s">&quot;github.com/ledgerwatch/erigon/cmd/utils&quot;</span>
+    <span class="s">&quot;github.com/ledgerwatch/erigon/rpc&quot;</span>
+    <span class="s">&quot;github.com/ledgerwatch/log/v3&quot;</span>
+    <span class="s">&quot;github.com/spf13/cobra&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">cmd</span><span class="p">,</span> <span class="nx">cfg</span> <span class="o">:=</span> <span class="nx">cli</span><span class="p">.</span><span class="nx">RootCommand</span><span class="p">()</span>
+    <span class="nx">rootCtx</span><span class="p">,</span> <span class="nx">rootCancel</span> <span class="o">:=</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">RootContext</span><span class="p">()</span>
+    <span class="nx">cmd</span><span class="p">.</span><span class="nx">RunE</span> <span class="p">=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">cmd</span> <span class="o">*</span><span class="nx">cobra</span><span class="p">.</span><span class="nx">Command</span><span class="p">,</span> <span class="nx">args</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+        <span class="nx">logger</span> <span class="o">:=</span> <span class="nx">log</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+        <span class="nx">db</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">cli</span><span class="p">.</span><span class="nx">RemoteServices</span><span class="p">(</span><span class="o">*</span><span class="nx">cfg</span><span class="p">,</span> <span class="nx">logger</span><span class="p">,</span> <span class="nx">rootCancel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="nx">log</span><span class="p">.</span><span class="nx">Error</span><span class="p">(</span><span class="s">&quot;Could not connect to DB&quot;</span><span class="p">,</span> <span class="s">&quot;error&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">nil</span>
+        <span class="p">}</span>
+        <span class="k">defer</span> <span class="nx">db</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">cli</span><span class="p">.</span><span class="nx">StartRpcServer</span><span class="p">(</span><span class="nx">cmd</span><span class="p">.</span><span class="nx">Context</span><span class="p">(),</span> <span class="o">*</span><span class="nx">cfg</span><span class="p">,</span> <span class="nx">APIList</span><span class="p">(</span><span class="nx">db</span><span class="p">));</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="nx">log</span><span class="p">.</span><span class="nx">Error</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">Error</span><span class="p">())</span>
+            <span class="k">return</span> <span class="kc">nil</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">nil</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">cmd</span><span class="p">.</span><span class="nx">ExecuteContext</span><span class="p">(</span><span class="nx">rootCtx</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Error</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">Error</span><span class="p">())</span>
+        <span class="nx">os</span><span class="p">.</span><span class="nx">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">APIList</span><span class="p">(</span><span class="nx">db</span> <span class="nx">kv</span><span class="p">.</span><span class="nx">RoDB</span><span class="p">)</span> <span class="p">[]</span><span class="nx">rpc</span><span class="p">.</span><span class="nx">API</span> <span class="p">{</span>
+    <span class="nx">api</span> <span class="o">:=</span> <span class="nx">NewAPI</span><span class="p">(</span><span class="nx">db</span><span class="p">)</span>
+    <span class="nx">customAPIList</span> <span class="o">:=</span> <span class="p">[]</span><span class="nx">rpc</span><span class="p">.</span><span class="nx">API</span><span class="p">{</span>
+        <span class="p">{</span>
+            <span class="nx">Namespace</span><span class="p">:</span> <span class="s">&quot;myNamespace&quot;</span><span class="p">,</span>
+            <span class="nx">Public</span><span class="p">:</span>    <span class="kc">true</span><span class="p">,</span>
+            <span class="nx">Service</span><span class="p">:</span>   <span class="nx">ExampleAPI</span><span class="p">(</span><span class="nx">api</span><span class="p">),</span>
+            <span class="nx">Version</span><span class="p">:</span>   <span class="s">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">customAPIList</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In the main we are just running our rpcdaemon as we defined it in <cite>APIList</cite>, in fact in <cite>APIList</cite> we are configuring our custom rpcdaemon to serve the ExampleAPI’s methods on namespace <cite>myNamespace</cite> meaning that in order to call GetBlockNumberByHash via json rpc we have to call method <cite>myNamespace_getBlockNumberByHash</cite>.</p>
+<p>Let’s now try it:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ go build
+$ ./hello-erigon-daemon --http.api<span class="o">=</span>myNamespace <span class="c1"># the flag enables our namespace.</span>
+</pre></div>
+</div>
+<p><strong>Note: Remember to run it with –private.api.addr=localhost:9090 and/or –datadir &lt;path-to-erigon-data&gt;</strong></p>
+<p>now it should be all set and we can test it with:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>curl -H <span class="s2">&quot;Content-Type: application/json&quot;</span> -X POST --data <span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;myNamespace_getBlockNumberByHash&quot;,&quot;params&quot;:[&quot;ANYHASH&quot;],&quot;id&quot;:1}&#39;</span> localhost:8545
+</pre></div>
+</div>
+<p>another example of custom daemon can be found at <a class="reference external" href="https://github.com/torquem-ch/project-1/blob/master/api.go">https://github.com/torquem-ch/project-1/blob/master/api.go</a>.</p>
+<p>Happy Building ~~~.</p>
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="../types.html"
+       title="previous chapter">← Erigon Types</a>
+  </li>
+  <li class="next">
+    <a href="../stagedsync.html"
+       title="next chapter">StagedSync →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright &lt;a href=&#34;https://github.com/ledgerwatch&#34;&gt;Ledgerwatch&lt;/a&gt;.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

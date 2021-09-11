@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>StagedSync</title>
+    
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/debug.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="Block Bodies Compression: Snappy" href="snappy.html" />
+  <link rel="prev" title="Tutorial: Build a personalized daemon" href="rpc/tutorial.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <span class="site-name">Erigon</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#welcome-to-erigon-s-documentation">welcome to erigon's documentation!</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="installation.html" class="reference internal ">Installation Guide</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="types.html" class="reference internal ">Erigon Types</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="rpc/tutorial.html" class="reference internal ">Tutorial: Build a personalized daemon</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">StagedSync</a>
+            
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#stage-1-download-block-headers" class="reference internal">Stage 1 : Download Block Headers</a></li>
+                
+                  <li class="toctree-l2"><a href="#stage-2-write-block-hashes" class="reference internal">Stage 2 : Write Block Hashes</a></li>
+                
+                  <li class="toctree-l2"><a href="#stage-3-download-block-bodies" class="reference internal">Stage 3 : Download Block Bodies</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="snappy.html" class="reference internal ">Block Bodies Compression: Snappy</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="etl.html" class="reference internal ">ETL</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="rpc/index.html" class="reference internal ">RPC Interfaces</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+    <li>StagedSync</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="rpc/tutorial.html"
+       title="previous chapter">← Tutorial: Build a personalized daemon</a>
+  </li>
+  <li class="next">
+    <a href="snappy.html"
+       title="next chapter">Block Bodies Compression: Snappy →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <div class="section" id="stagedsync">
+<h1>StagedSync<a class="headerlink" href="#stagedsync" title="Permalink to this headline">¶</a></h1>
+<p>We tried to maximally decompose the sync process into stages, and perform them sequentially. From the first sight, it might sound like a bad idea - why not use concurrency? However, we noticed that running many things concurrently obscured our ability to profile and optimise code - there is simply too much going on. Decomposition allowed us to optimise each stage in separation, which is much more tractable. We also noticed the benefit of improved code structure.</p>
+<p>All of the stages are declared in <a class="reference external" href="https://github.com/ledgerwatch/erigon/blob/master/eth/stagedsync/stagebuilder.go">https://github.com/ledgerwatch/erigon/blob/master/eth/stagedsync/stagebuilder.go</a></p>
+<div class="section" id="stage-1-download-block-headers">
+<h2>Stage 1 : Download Block Headers<a class="headerlink" href="#stage-1-download-block-headers" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+                <span class="nx">ID</span><span class="p">:</span> <span class="nx">stages</span><span class="p">.</span><span class="nx">Headers</span><span class="p">,</span>
+                <span class="nx">Build</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">world</span> <span class="nx">StageParameters</span><span class="p">)</span> <span class="o">*</span><span class="nx">Stage</span> <span class="p">{</span>
+                        <span class="k">return</span> <span class="o">&amp;</span><span class="nx">Stage</span><span class="p">{</span>
+                                <span class="nx">ID</span><span class="p">:</span>          <span class="nx">stages</span><span class="p">.</span><span class="nx">Headers</span><span class="p">,</span>
+                                <span class="nx">Description</span><span class="p">:</span> <span class="s">&quot;Download headers&quot;</span><span class="p">,</span>
+                                <span class="nx">ExecFunc</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">StageState</span><span class="p">,</span> <span class="nx">u</span> <span class="nx">Unwinder</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+                                        <span class="k">return</span> <span class="nx">SpawnHeaderDownloadStage</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nx">u</span><span class="p">,</span> <span class="nx">world</span><span class="p">.</span><span class="nx">d</span><span class="p">,</span> <span class="nx">world</span><span class="p">.</span><span class="nx">headersFetchers</span><span class="p">)</span>
+                                <span class="p">},</span>
+                                <span class="nx">UnwindFunc</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">u</span> <span class="o">*</span><span class="nx">UnwindState</span><span class="p">,</span> <span class="nx">s</span> <span class="o">*</span><span class="nx">StageState</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+                                        <span class="k">return</span> <span class="nx">u</span><span class="p">.</span><span class="nx">Done</span><span class="p">(</span><span class="nx">world</span><span class="p">.</span><span class="nx">db</span><span class="p">)</span>
+                                <span class="p">},</span>
+                        <span class="p">}</span>
+                <span class="p">},</span>
+        <span class="p">},</span>
+</pre></div>
+</div>
+<p>This stage uses two processes, a fetcher method and a processer method.</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><span class="nx">Downloader</span><span class="p">)</span> <span class="nx">fetchHeaders</span><span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">peerConnection</span><span class="p">,</span> <span class="nx">from</span> <span class="kt">uint64</span><span class="p">)</span> <span class="kt">error</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><span class="nx">Downloader</span><span class="p">)</span> <span class="nx">processHeaders</span><span class="p">(</span><span class="nx">origin</span> <span class="kt">uint64</span><span class="p">,</span> <span class="nx">pivot</span> <span class="kt">uint64</span><span class="p">,</span> <span class="nx">blockNumber</span> <span class="kt">uint64</span><span class="p">)</span> <span class="kt">error</span>
+</pre></div>
+</div>
+<p>the fetcher method retrieve from the peer a group of block headers encoded in RLP, decode them and send them to the process method.</p>
+<p>the process method takes the headers retrieve thanks to the fetcher and does the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Extract Difficulty from each block in the database and record total Difficulty in the database.</p></li>
+<li><p>Save block headers in database.</p></li>
+</ul>
+</div></blockquote>
+<p>This process repeates until we reach the maximun height. once it is reached the stage finish.</p>
+<p>Changes in DB:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Headers are encoded in database under bucket <cite>dbutils.HeaderPrefix</cite></p></li>
+<li><p>Total Difficulty per block is written in <cite>dbutils.HeaderTDKey</cite></p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="stage-2-write-block-hashes">
+<h2>Stage 2 : Write Block Hashes<a class="headerlink" href="#stage-2-write-block-hashes" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+        <span class="nx">ID</span><span class="p">:</span> <span class="nx">stages</span><span class="p">.</span><span class="nx">BlockHashes</span><span class="p">,</span>
+        <span class="nx">Build</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">world</span> <span class="nx">StageParameters</span><span class="p">)</span> <span class="o">*</span><span class="nx">Stage</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="o">&amp;</span><span class="nx">Stage</span><span class="p">{</span>
+                        <span class="nx">ID</span><span class="p">:</span>          <span class="nx">stages</span><span class="p">.</span><span class="nx">BlockHashes</span><span class="p">,</span>
+                        <span class="nx">Description</span><span class="p">:</span> <span class="s">&quot;Write block hashes&quot;</span><span class="p">,</span>
+                        <span class="nx">ExecFunc</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">StageState</span><span class="p">,</span> <span class="nx">u</span> <span class="nx">Unwinder</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+                                <span class="k">return</span> <span class="nx">SpawnBlockHashStage</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nx">world</span><span class="p">.</span><span class="nx">db</span><span class="p">,</span> <span class="nx">world</span><span class="p">.</span><span class="nx">datadir</span><span class="p">,</span> <span class="nx">world</span><span class="p">.</span><span class="nx">QuitCh</span><span class="p">)</span>
+                        <span class="p">},</span>
+                        <span class="nx">UnwindFunc</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">u</span> <span class="o">*</span><span class="nx">UnwindState</span><span class="p">,</span> <span class="nx">s</span> <span class="o">*</span><span class="nx">StageState</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+                                <span class="k">return</span> <span class="nx">u</span><span class="p">.</span><span class="nx">Done</span><span class="p">(</span><span class="nx">world</span><span class="p">.</span><span class="nx">db</span><span class="p">)</span>
+                        <span class="p">},</span>
+                <span class="p">}</span>
+        <span class="p">},</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+<p>This stage takes the data written in stage 1, and by using the ETL framework, it writes (blockHash =&gt; blockNumber) in order in the Database. So that with given block hash we can get given block number and thus retrieve a block by knowing only the hash and not the number. We use a different stage because we want to write pre-sorted data in order to minimize write operations in the Database.</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">extractHeaders</span><span class="p">(</span><span class="nx">k</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">v</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">next</span> <span class="nx">etl</span><span class="p">.</span><span class="nx">ExtractNextFunc</span><span class="p">)</span> <span class="kt">error</span>
+</pre></div>
+</div>
+<p>The function above its used with ETL to extract blockHashes and blockNumber from the key of the headers bucket. In fact, since the key of the headers bucket are a concatenation of blockNumber and blockHash, they can be used in such process.</p>
+<p>Changes in DB:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>BlockHash =&gt; BlockNumber are written in bucket <cite>dbutils.HeaderNumberPrefix</cite></p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="stage-3-download-block-bodies">
+<h2>Stage 3 : Download Block Bodies<a class="headerlink" href="#stage-3-download-block-bodies" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+        <span class="nx">ID</span><span class="p">:</span> <span class="nx">stages</span><span class="p">.</span><span class="nx">Bodies</span><span class="p">,</span>
+        <span class="nx">Build</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">world</span> <span class="nx">StageParameters</span><span class="p">)</span> <span class="o">*</span><span class="nx">Stage</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="o">&amp;</span><span class="nx">Stage</span><span class="p">{</span>
+                        <span class="nx">ID</span><span class="p">:</span>          <span class="nx">stages</span><span class="p">.</span><span class="nx">Bodies</span><span class="p">,</span>
+                        <span class="nx">Description</span><span class="p">:</span> <span class="s">&quot;Download block bodies&quot;</span><span class="p">,</span>
+                        <span class="nx">ExecFunc</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">StageState</span><span class="p">,</span> <span class="nx">u</span> <span class="nx">Unwinder</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+                                <span class="k">return</span> <span class="nx">spawnBodyDownloadStage</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nx">u</span><span class="p">,</span> <span class="nx">world</span><span class="p">.</span><span class="nx">d</span><span class="p">,</span> <span class="nx">world</span><span class="p">.</span><span class="nx">pid</span><span class="p">,</span> <span class="nx">world</span><span class="p">.</span><span class="nx">prefetchedBlocks</span><span class="p">)</span>
+                        <span class="p">},</span>
+                        <span class="nx">UnwindFunc</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">u</span> <span class="o">*</span><span class="nx">UnwindState</span><span class="p">,</span> <span class="nx">s</span> <span class="o">*</span><span class="nx">StageState</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+                                <span class="k">return</span> <span class="nx">unwindBodyDownloadStage</span><span class="p">(</span><span class="nx">u</span><span class="p">,</span> <span class="nx">world</span><span class="p">.</span><span class="nx">db</span><span class="p">)</span>
+                        <span class="p">},</span>
+                <span class="p">}</span>
+        <span class="p">},</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+<p>This stage, downloads block bodies and put them into the database. This stage is divided into two processes:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><span class="nx">Downloader</span><span class="p">)</span> <span class="nx">fetchBodies</span><span class="p">(</span><span class="nx">from</span> <span class="kt">uint64</span><span class="p">)</span> <span class="kt">error</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><span class="nx">Downloader</span><span class="p">)</span> <span class="nx">processBodiesStage</span><span class="p">(</span><span class="nx">logPrefix</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">to</span> <span class="kt">uint64</span><span class="p">)</span> <span class="kt">error</span>
+</pre></div>
+</div>
+<p><cite>fetchBodies</cite> downloads the bodies from the peer and decode them from RLP format.</p>
+<p><cite>processBodiesStage</cite> takes the bodies downloaded and those the following with them:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Verifiy them.</p></li>
+<li><p>RLP-encode them.</p></li>
+<li><p>compress the rlp-encoded bodies using <cite>snappy</cite>.</p></li>
+<li><p>put the commpressed RLP into the database.</p></li>
+</ul>
+</div></blockquote>
+<p>in order for Erigon to reaccess the block bodies, it decompress the and rlp-decode them. the entries in the db for block bodies are a concatenation of [block number] + [block hash] in order to pre-sort them before inserting them into the database.</p>
+<p>Changes in DB:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[block number] + [block hash] =&gt; Block bodies are written in bucket <cite>dbutils.BlockBodyPrefix</cite></p></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="rpc/tutorial.html"
+       title="previous chapter">← Tutorial: Build a personalized daemon</a>
+  </li>
+  <li class="next">
+    <a href="snappy.html"
+       title="next chapter">Block Bodies Compression: Snappy →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright &lt;a href=&#34;https://github.com/ledgerwatch&#34;&gt;Ledgerwatch&lt;/a&gt;.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

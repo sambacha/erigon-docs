@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Block Bodies Compression: Snappy</title>
+    
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/debug.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="ETL" href="etl.html" />
+  <link rel="prev" title="StagedSync" href="stagedsync.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <span class="site-name">Erigon</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#welcome-to-erigon-s-documentation">welcome to erigon's documentation!</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="installation.html" class="reference internal ">Installation Guide</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="types.html" class="reference internal ">Erigon Types</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="rpc/tutorial.html" class="reference internal ">Tutorial: Build a personalized daemon</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="stagedsync.html" class="reference internal ">StagedSync</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">Block Bodies Compression: Snappy</a>
+            
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#issue" class="reference internal">Issue</a></li>
+                
+                  <li class="toctree-l2"><a href="#snappy" class="reference internal">Snappy</a></li>
+                
+                  <li class="toctree-l2"><a href="#why-snappy" class="reference internal">Why Snappy</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="etl.html" class="reference internal ">ETL</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="rpc/index.html" class="reference internal ">RPC Interfaces</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+    <li>Block Bodies Compression: Snappy</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="stagedsync.html"
+       title="previous chapter">← StagedSync</a>
+  </li>
+  <li class="next">
+    <a href="etl.html"
+       title="next chapter">ETL →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <div class="section" id="block-bodies-compression-snappy">
+<h1>Block Bodies Compression: Snappy<a class="headerlink" href="#block-bodies-compression-snappy" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="issue">
+<h2>Issue<a class="headerlink" href="#issue" title="Permalink to this headline">¶</a></h2>
+<p>Block bodies repressent the biggest portion of the database as a bucket and they we need to make such space more efficient. Thus, we use compression through snappy.</p>
+</div>
+<div class="section" id="snappy">
+<h2>Snappy<a class="headerlink" href="#snappy" title="Permalink to this headline">¶</a></h2>
+<p>Snappy is a compression/decompression library. It does not aim for maximum compression, or compatibility with any other compression library; instead, it aims for very high speeds and reasonable compression. For instance, compared to the fastest mode of zlib, Snappy is an order of magnitude faster for most inputs, but the resulting compressed files are anywhere from 20% to 100% bigger. On a single core of a Core i7 processor in 64-bit mode, Snappy compresses at about 250 MB/sec or more and decompresses at about 500 MB/sec or more.</p>
+</div>
+<div class="section" id="why-snappy">
+<h2>Why Snappy<a class="headerlink" href="#why-snappy" title="Permalink to this headline">¶</a></h2>
+<p>In the case of Erigon, compression is needed to reduce database size, however we cannot have slow processing while doing so. thanks, to snappy we can reduce the size of block bodies without having to sacrifice a significant amount of time during the insertion of block bodies in the database in stage 2.</p>
+</div>
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="stagedsync.html"
+       title="previous chapter">← StagedSync</a>
+  </li>
+  <li class="next">
+    <a href="etl.html"
+       title="next chapter">ETL →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright &lt;a href=&#34;https://github.com/ledgerwatch&#34;&gt;Ledgerwatch&lt;/a&gt;.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

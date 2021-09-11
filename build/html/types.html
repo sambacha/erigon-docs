@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Erigon Types</title>
+    
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/debug.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="Tutorial: Build a personalized daemon" href="rpc/tutorial.html" />
+  <link rel="prev" title="Installation Guide" href="installation.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <span class="site-name">Erigon</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#welcome-to-erigon-s-documentation">welcome to erigon's documentation!</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="installation.html" class="reference internal ">Installation Guide</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">Erigon Types</a>
+            
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#address-and-hash" class="reference internal">Address and Hash</a></li>
+                
+                  <li class="toctree-l2"><a href="#transaction" class="reference internal">Transaction</a></li>
+                
+                  <li class="toctree-l2"><a href="#block-header" class="reference internal">Block Header</a></li>
+                
+                  <li class="toctree-l2"><a href="#block" class="reference internal">Block</a></li>
+                
+                  <li class="toctree-l2"><a href="#account" class="reference internal">Account</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="rpc/tutorial.html" class="reference internal ">Tutorial: Build a personalized daemon</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="stagedsync.html" class="reference internal ">StagedSync</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="snappy.html" class="reference internal ">Block Bodies Compression: Snappy</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="etl.html" class="reference internal ">ETL</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="rpc/index.html" class="reference internal ">RPC Interfaces</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+    <li>Erigon Types</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="installation.html"
+       title="previous chapter">← Installation Guide</a>
+  </li>
+  <li class="next">
+    <a href="rpc/tutorial.html"
+       title="next chapter">Tutorial: Build a personalized daemon →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <div class="section" id="erigon-types">
+<h1>Erigon Types<a class="headerlink" href="#erigon-types" title="Permalink to this headline">¶</a></h1>
+<p>This document will list each major types defined and used by Erigon.
+They are found in <cite>github.com/ledgerwatch/erigon/core/types</cite> and <cite>github.com/ledgerwatch/erigon/common</cite></p>
+<div class="section" id="address-and-hash">
+<h2>Address and Hash<a class="headerlink" href="#address-and-hash" title="Permalink to this headline">¶</a></h2>
+<p>package: <cite>github.com/ledgerwatch/erigon/common</cite></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">Address</span> <span class="p">[</span><span class="mi">20</span><span class="p">]</span><span class="kt">byte</span>
+</pre></div>
+</div>
+<p>Address represents the 20 byte address of an Ethereum account.</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">Hash</span> <span class="p">[</span><span class="mi">32</span><span class="p">]</span><span class="kt">byte</span>
+</pre></div>
+</div>
+<p>Hash represents the 32 byte Keccak256 hash of arbitrary data.
+Address repressents the 20 byte standard Ethereum Address</p>
+<p>Both Hash and Address are bytes arrays.</p>
+</div>
+<div class="section" id="transaction">
+<h2>Transaction<a class="headerlink" href="#transaction" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">Transaction</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">data</span> <span class="nx">txdata</span>
+    <span class="nx">time</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
+
+    <span class="c1">// caches</span>
+    <span class="nx">hash</span> <span class="nx">atomic</span><span class="p">.</span><span class="nx">Value</span>
+    <span class="nx">size</span> <span class="nx">atomic</span><span class="p">.</span><span class="nx">Value</span>
+    <span class="nx">from</span> <span class="nx">atomic</span><span class="p">.</span><span class="nx">Value</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">txdata</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">AccountNonce</span> <span class="kt">uint64</span>
+    <span class="nx">Price</span>        <span class="nx">uint256</span><span class="p">.</span><span class="nx">Int</span>
+    <span class="nx">GasLimit</span>     <span class="kt">uint64</span>
+    <span class="nx">Recipient</span>    <span class="o">*</span><span class="nx">common</span><span class="p">.</span><span class="nx">Address</span>
+    <span class="nx">Amount</span>       <span class="nx">uint256</span><span class="p">.</span><span class="nx">Int</span>
+    <span class="nx">Payload</span>      <span class="p">[]</span><span class="kt">byte</span>
+
+    <span class="c1">// Signature values</span>
+    <span class="nx">V</span> <span class="nx">uint256</span><span class="p">.</span><span class="nx">Int</span>
+    <span class="nx">R</span> <span class="nx">uint256</span><span class="p">.</span><span class="nx">Int</span>
+    <span class="nx">S</span> <span class="nx">uint256</span><span class="p">.</span><span class="nx">Int</span>
+
+    <span class="c1">// This is only used when marshaling to JSON.</span>
+    <span class="nx">Hash</span> <span class="o">*</span><span class="nx">common</span><span class="p">.</span><span class="nx">Hash</span> <span class="s">`json:&quot;hash&quot; rlp:&quot;-&quot;`</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">Transactions</span> <span class="p">[]</span><span class="o">*</span><span class="nx">Transaction</span>
+</pre></div>
+</div>
+<p>repressent an Ethereum Transaction.</p>
+<p><strong>from</strong></p>
+<p>Transaction’s sender.</p>
+<p><strong>txData.AccountNonce</strong></p>
+<p>Transaction’s nonce.</p>
+<p><strong>txdata.Price</strong></p>
+<p>price of each unit of gas.</p>
+<p><strong>txdata.GasLimit</strong></p>
+<p>Maximun amount of units of gas the transaction can use.</p>
+<p><strong>txdata.Recipient</strong></p>
+<p>Recipient of the transaction.</p>
+<p><strong>txdata.Amount</strong></p>
+<p>Amount of ether sent along the transaction.</p>
+<p><strong>txdata.Payload</strong></p>
+<p>transaction’s data, it’s meant to execute contracts code.</p>
+<p><strong>Transactions type</strong></p>
+<p>an alias for an array of Transaction. Instead of []Transaction, Transactions can be used.</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">Transaction</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">data</span> <span class="nx">txdata</span>
+    <span class="nx">time</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
+
+    <span class="c1">// caches</span>
+    <span class="nx">hash</span> <span class="nx">atomic</span><span class="p">.</span><span class="nx">Value</span>
+    <span class="nx">size</span> <span class="nx">atomic</span><span class="p">.</span><span class="nx">Value</span>
+    <span class="nx">from</span> <span class="nx">atomic</span><span class="p">.</span><span class="nx">Value</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">txdata</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">AccountNonce</span> <span class="kt">uint64</span>
+    <span class="nx">Price</span>        <span class="nx">uint256</span><span class="p">.</span><span class="nx">Int</span>
+    <span class="nx">GasLimit</span>     <span class="kt">uint64</span>
+    <span class="nx">Recipient</span>    <span class="o">*</span><span class="nx">common</span><span class="p">.</span><span class="nx">Address</span>
+    <span class="nx">Amount</span>       <span class="nx">uint256</span><span class="p">.</span><span class="nx">Int</span>
+    <span class="nx">Payload</span>      <span class="p">[]</span><span class="kt">byte</span>
+
+    <span class="c1">// Signature values</span>
+    <span class="nx">V</span> <span class="nx">uint256</span><span class="p">.</span><span class="nx">Int</span>
+    <span class="nx">R</span> <span class="nx">uint256</span><span class="p">.</span><span class="nx">Int</span>
+    <span class="nx">S</span> <span class="nx">uint256</span><span class="p">.</span><span class="nx">Int</span>
+
+    <span class="c1">// This is only used when marshaling to JSON.</span>
+    <span class="nx">Hash</span> <span class="o">*</span><span class="nx">common</span><span class="p">.</span><span class="nx">Hash</span> <span class="s">`json:&quot;hash&quot; rlp:&quot;-&quot;`</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">Transactions</span> <span class="p">[]</span><span class="o">*</span><span class="nx">Transaction</span>
+</pre></div>
+</div>
+<p>repressent an Ethereum Transaction.</p>
+</div>
+<div class="section" id="block-header">
+<h2>Block Header<a class="headerlink" href="#block-header" title="Permalink to this headline">¶</a></h2>
+<p>package: <cite>github.com/ledgerwatch/erigon/core/types</cite></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">Header</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">ParentHash</span>  <span class="nx">common</span><span class="p">.</span><span class="nx">Hash</span>
+    <span class="nx">UncleHash</span>   <span class="nx">common</span><span class="p">.</span><span class="nx">Hash</span>
+    <span class="nx">Coinbase</span>    <span class="nx">common</span><span class="p">.</span><span class="nx">Address</span>
+    <span class="nx">Root</span>        <span class="nx">common</span><span class="p">.</span><span class="nx">Hash</span>
+    <span class="nx">TxHash</span>      <span class="nx">common</span><span class="p">.</span><span class="nx">Hash</span>
+    <span class="nx">ReceiptHash</span> <span class="nx">common</span><span class="p">.</span><span class="nx">Hash</span>
+    <span class="nx">Difficulty</span>  <span class="o">*</span><span class="nx">big</span><span class="p">.</span><span class="nx">Int</span>
+    <span class="nx">Number</span>      <span class="o">*</span><span class="nx">big</span><span class="p">.</span><span class="nx">Int</span>
+    <span class="nx">GasLimit</span>    <span class="kt">uint64</span>
+    <span class="nx">GasUsed</span>     <span class="kt">uint64</span>
+    <span class="nx">Time</span>        <span class="kt">uint64</span>
+    <span class="nx">Extra</span>       <span class="p">[]</span><span class="kt">byte</span>
+    <span class="nx">MixDigest</span>   <span class="nx">common</span><span class="p">.</span><span class="nx">Hash</span>
+    <span class="nx">Nonce</span>       <span class="nx">BlockNonce</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>It represents a block Header.</p>
+<p><strong>ParentHash</strong></p>
+<p>Its the hash of the block that comes before the Header’s block.</p>
+<p><strong>UncleHash</strong></p>
+<p>It’s the uncle hash if there is.</p>
+<p><strong>Coinbase</strong></p>
+<p>It’s the address of the miner that mined the block.</p>
+<p><strong>Root</strong></p>
+<p>Merkel root of the Header.</p>
+<p><strong>TxHash</strong></p>
+<p>The hash of the block’s transactions.</p>
+<p><strong>ReceiptHash</strong></p>
+<p>The hash of the block’s transactions receipts.</p>
+<p><strong>Difficulty</strong></p>
+<p>The Total Difficulty of the block.</p>
+<p><strong>Number</strong></p>
+<p>The associated block Number.</p>
+<p><strong>GasLimit</strong></p>
+<p>The block’s gas limit.</p>
+<p><strong>GasUsed</strong></p>
+<p>The gas used by the transactions included in the block.</p>
+<p><strong>Time</strong></p>
+<p>Block’s timestamp.</p>
+</div>
+<div class="section" id="block">
+<h2>Block<a class="headerlink" href="#block" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">Block</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">header</span>       <span class="o">*</span><span class="nx">Header</span>
+    <span class="nx">uncles</span>       <span class="p">[]</span><span class="o">*</span><span class="nx">Header</span>
+    <span class="nx">transactions</span> <span class="nx">Transactions</span>
+
+    <span class="nx">hash</span> <span class="nx">atomic</span><span class="p">.</span><span class="nx">Value</span>
+    <span class="nx">size</span> <span class="nx">atomic</span><span class="p">.</span><span class="nx">Value</span>
+
+    <span class="nx">td</span> <span class="o">*</span><span class="nx">big</span><span class="p">.</span><span class="nx">Int</span>
+
+    <span class="c1">// These fields are used by package eth to track</span>
+    <span class="c1">// inter-peer block relay.</span>
+    <span class="nx">ReceivedAt</span>   <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
+    <span class="nx">ReceivedFrom</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>repressent a block of the chain.</p>
+<p><strong>header</strong></p>
+<p>Block’s Header.</p>
+<p><strong>uncles</strong></p>
+<p>Block’s uncles headers block.</p>
+<p><strong>transactions</strong></p>
+<p>Array of transaction included in the block.</p>
+<p><strong>td</strong></p>
+<p>total difficulty accumulated up to the block. sum of all prev blocks difficulties + block difficulty.</p>
+</div>
+<div class="section" id="account">
+<h2>Account<a class="headerlink" href="#account" title="Permalink to this headline">¶</a></h2>
+<p>package: <cite>github.com/ledgerwatch/erigon/core/types/accounts</cite></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">Account</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Initialised</span> <span class="kt">bool</span>
+    <span class="nx">Nonce</span>       <span class="kt">uint64</span>
+    <span class="nx">Balance</span>     <span class="nx">uint256</span><span class="p">.</span><span class="nx">Int</span>
+    <span class="nx">Root</span>        <span class="nx">common</span><span class="p">.</span><span class="nx">Hash</span>
+    <span class="nx">CodeHash</span>    <span class="nx">common</span><span class="p">.</span><span class="nx">Hash</span>
+    <span class="nx">Incarnation</span> <span class="kt">uint64</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Nonce</strong></p>
+<p>Number of the type uint64.</p>
+<p>nonce of the account (aka. the transaction of the account)</p>
+<p><strong>Balance</strong></p>
+<p>Balance is denominated in wei, and there 10^18 wei in each Ether.</p>
+<p><strong>Root</strong></p>
+<p>Merkle root of the smart contract storage, organised into a tree. Non-contract accounts cannot have storage, therefore root makes sense only for smart contract accounts.</p>
+<p><strong>Code hash</strong></p>
+<p>Hash of the bytecode (deployed code) of a smart contract.</p>
+<p><strong>Incarnation</strong></p>
+<p>a digit which increases each SELFDESTRUCT or CREATE2 opcodes. In fact, it would be possible to create Account with very big storage (increase storage size during many blocks).
+Then delete this account (SELFDESTRUCT). This attack vector would cause nodes to hang for several minutes.</p>
+<p><strong>Important Note: Accounts are not directly linked to their addresses, they are linked as key-value in the database</strong></p>
+</div>
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="installation.html"
+       title="previous chapter">← Installation Guide</a>
+  </li>
+  <li class="next">
+    <a href="rpc/tutorial.html"
+       title="next chapter">Tutorial: Build a personalized daemon →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright &lt;a href=&#34;https://github.com/ledgerwatch&#34;&gt;Ledgerwatch&lt;/a&gt;.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

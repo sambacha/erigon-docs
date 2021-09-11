@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Installation Guide</title>
+    
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/debug.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="Erigon Types" href="types.html" />
+  <link rel="prev" title="Welcome to Erigon’s documentation!" href="index.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <span class="site-name">Erigon</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#welcome-to-erigon-s-documentation">welcome to erigon's documentation!</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">Installation Guide</a>
+            
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#prerequisite" class="reference internal">Prerequisite</a></li>
+                
+                  <li class="toctree-l2"><a href="#compiling" class="reference internal">Compiling</a></li>
+                
+                  <li class="toctree-l2"><a href="#running" class="reference internal">Running</a></li>
+                
+                  <li class="toctree-l2"><a href="#rpc-daemon" class="reference internal">RPC Daemon</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="types.html" class="reference internal ">Erigon Types</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="rpc/tutorial.html" class="reference internal ">Tutorial: Build a personalized daemon</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="stagedsync.html" class="reference internal ">StagedSync</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="snappy.html" class="reference internal ">Block Bodies Compression: Snappy</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="etl.html" class="reference internal ">ETL</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="rpc/index.html" class="reference internal ">RPC Interfaces</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+    <li>Installation Guide</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="index.html"
+       title="previous chapter">← Welcome to Erigon’s documentation!</a>
+  </li>
+  <li class="next">
+    <a href="types.html"
+       title="next chapter">Erigon Types →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <div class="section" id="installation-guide">
+<h1>Installation Guide<a class="headerlink" href="#installation-guide" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="prerequisite">
+<h2>Prerequisite<a class="headerlink" href="#prerequisite" title="Permalink to this headline">¶</a></h2>
+<p>To follow up this guide you need to have Golang installed, since we are going to use it to compile the code itself. you can find a tutorial on how to install Golang here: <a class="reference external" href="https://golang.org/doc/install">https://golang.org/doc/install</a>.</p>
+<p>Additionally, you may want to have git installed (but you can also download directly from Github): <a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">https://git-scm.com/book/en/v2/Getting-Started-Installing-Git</a>.</p>
+</div>
+<div class="section" id="compiling">
+<h2>Compiling<a class="headerlink" href="#compiling" title="Permalink to this headline">¶</a></h2>
+<p>In order to download the code and compile you need the following commands:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/ledgerwatch/erigon
+
+$ <span class="nb">cd</span> erigon
+
+$ make
+</pre></div>
+</div>
+</div>
+<div class="section" id="running">
+<h2>Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h2>
+<p>After this is done, you can run Erigon by executing.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ ./build/bin/erigon
+</pre></div>
+</div>
+<p>what this will do is start a sync process in mainnet.</p>
+</div>
+<div class="section" id="rpc-daemon">
+<h2>RPC Daemon<a class="headerlink" href="#rpc-daemon" title="Permalink to this headline">¶</a></h2>
+<p>Unlike Go-Ethereum (geth), Erigon has a separate RPC service called rpcdaemon, this service is used for managing JSON RPC API. In fact, they are not present in Erigon with <cite>–rpc</cite> flag but we have to start a separate service for it. first of all Erigon must give access to the rpcdaemon to the database through an API. so we need to run Erigon with the flag <strong>–private.api.addr</strong> which by convention should be set to <strong>localhost:9090</strong>.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ ./build/bin/erigon --private.api.addr<span class="o">=</span>localhost:9090
+</pre></div>
+</div>
+<p>then to run the rpcdaemon attached to our node we just run</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ ./build/bin/rpcdaemon
+</pre></div>
+</div>
+<p>now we can make use of the JSON RPC API at localhost:8545. in order to change the address in which we serve the API we can use the flag <strong>–http.api=&lt;something&gt;</strong></p>
+</div>
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="index.html"
+       title="previous chapter">← Welcome to Erigon’s documentation!</a>
+  </li>
+  <li class="next">
+    <a href="types.html"
+       title="next chapter">Erigon Types →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright &lt;a href=&#34;https://github.com/ledgerwatch&#34;&gt;Ledgerwatch&lt;/a&gt;.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

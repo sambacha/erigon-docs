@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>ETL</title>
+    
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/debug.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="RPC Interfaces" href="rpc/index.html" />
+  <link rel="prev" title="Block Bodies Compression: Snappy" href="snappy.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <span class="site-name">Erigon</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#welcome-to-erigon-s-documentation">welcome to erigon's documentation!</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="installation.html" class="reference internal ">Installation Guide</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="types.html" class="reference internal ">Erigon Types</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="rpc/tutorial.html" class="reference internal ">Tutorial: Build a personalized daemon</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="stagedsync.html" class="reference internal ">StagedSync</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="snappy.html" class="reference internal ">Block Bodies Compression: Snappy</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">ETL</a>
+            
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#example" class="reference internal">Example</a></li>
+                
+                  <li class="toctree-l2"><a href="#data-transformation" class="reference internal">Data Transformation</a></li>
+                
+                  <li class="toctree-l2"><a href="#transform-on-extraction" class="reference internal">Transform On Extraction</a></li>
+                
+                  <li class="toctree-l2"><a href="#transform-on-loading" class="reference internal">Transform On Loading</a></li>
+                
+                  <li class="toctree-l2"><a href="#buffer-types" class="reference internal">Buffer Types</a></li>
+                
+                  <li class="toctree-l2"><a href="#loading-into-database" class="reference internal">Loading Into Database</a></li>
+                
+                  <li class="toctree-l2"><a href="#saving-restoring-state" class="reference internal">Saving & Restoring State</a></li>
+                
+                  <li class="toctree-l2"><a href="#etl-transform-function" class="reference internal">etl.Transform function</a></li>
+                
+                  <li class="toctree-l2"><a href="#etl-collector-struct" class="reference internal">etl.Collector struct</a></li>
+                
+                  <li class="toctree-l2"><a href="#optimizations" class="reference internal">Optimizations</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="rpc/index.html" class="reference internal ">RPC Interfaces</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+    <li>ETL</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="snappy.html"
+       title="previous chapter">← Block Bodies Compression: Snappy</a>
+  </li>
+  <li class="next">
+    <a href="rpc/index.html"
+       title="next chapter">RPC Interfaces →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <div class="section" id="etl">
+<h1>ETL<a class="headerlink" href="#etl" title="Permalink to this headline">¶</a></h1>
+<p>ETL framework is most commonly used in [staged sync](../../eth/stagedsync).</p>
+<p>It implements a pattern where we extract some data from a database, transform it,
+then put it into temp files and insert back to the database in sorted order.</p>
+<p>Inserting entries into our KV storage sorted by keys helps to minimize write
+amplification, hence it is much faster, even considering additional I/O that
+is generated by storing files.</p>
+<p>It behaves similarly to enterprise [Extract, Tranform, Load] frameworks, hence the name.
+We use temporary files because that helps keep RAM usage predictable and allows
+using ETL on large amounts of data.</p>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">keyTransformExtractFunc</span><span class="p">(</span><span class="nx">transformKey</span> <span class="kd">func</span><span class="p">([]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">))</span> <span class="nx">etl</span><span class="p">.</span><span class="nx">ExtractFunc</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kd">func</span><span class="p">(</span><span class="nx">k</span><span class="p">,</span> <span class="nx">v</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">next</span> <span class="nx">etl</span><span class="p">.</span><span class="nx">ExtractNextFunc</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+        <span class="nx">newK</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">transformKey</span><span class="p">(</span><span class="nx">k</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">err</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">k</span><span class="p">,</span> <span class="nx">newK</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">err</span> <span class="o">:=</span> <span class="nx">etl</span><span class="p">.</span><span class="nx">Transform</span><span class="p">(</span>
+        <span class="nx">db</span><span class="p">,</span>                                              <span class="c1">// database</span>
+        <span class="nx">dbutils</span><span class="p">.</span><span class="nx">PlainStateBucket</span><span class="p">,</span>                        <span class="c1">// &quot;from&quot; bucket</span>
+        <span class="nx">dbutils</span><span class="p">.</span><span class="nx">CurrentStateBucket</span><span class="p">,</span>                      <span class="c1">// &quot;to&quot; bucket</span>
+        <span class="nx">datadir</span><span class="p">,</span>                                         <span class="c1">// where to store temp files</span>
+        <span class="nx">keyTransformExtractFunc</span><span class="p">(</span><span class="nx">transformPlainStateKey</span><span class="p">),</span> <span class="c1">// transformFunc on extraction</span>
+        <span class="nx">etl</span><span class="p">.</span><span class="nx">IdentityLoadFunc</span><span class="p">,</span>                            <span class="c1">// transform on load</span>
+        <span class="nx">etl</span><span class="p">.</span><span class="nx">TransformArgs</span><span class="p">{</span>                               <span class="c1">// additional arguments</span>
+            <span class="nx">Quit</span><span class="p">:</span> <span class="nx">quit</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="data-transformation">
+<h2>Data Transformation<a class="headerlink" href="#data-transformation" title="Permalink to this headline">¶</a></h2>
+<p>Data could be transformed in two places along the pipeline:</p>
+<ul class="simple">
+<li><p>transform on extraction</p></li>
+<li><p>transform on loading</p></li>
+</ul>
+</div>
+<div class="section" id="transform-on-extraction">
+<h2>Transform On Extraction<a class="headerlink" href="#transform-on-extraction" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">ExtractFunc</span> <span class="kd">func</span><span class="p">(</span><span class="nx">k</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">v</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">next</span> <span class="nx">ExtractNextFunc</span><span class="p">)</span> <span class="kt">error</span>
+</pre></div>
+</div>
+<p>Transform on extraction function receives the currenk key and value from the
+source bucket.</p>
+</div>
+<div class="section" id="transform-on-loading">
+<h2>Transform On Loading<a class="headerlink" href="#transform-on-loading" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">LoadFunc</span> <span class="kd">func</span><span class="p">(</span><span class="nx">k</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">value</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">state</span> <span class="nx">State</span><span class="p">,</span> <span class="nx">next</span> <span class="nx">LoadNextFunc</span><span class="p">)</span> <span class="kt">error</span>
+</pre></div>
+</div>
+<p>As well as the current key and value, the transform on loading function
+receives the <cite>State</cite> object that can receive data from the destination bucket.</p>
+<p>That is used in index generation where we want to extend index entries with new
+data instead of just adding new ones.</p>
+</div>
+<div class="section" id="buffer-types">
+<h2>Buffer Types<a class="headerlink" href="#buffer-types" title="Permalink to this headline">¶</a></h2>
+<p>Before the data is being flushed into temp files, it is getting collected into
+a buffer until if overflows (<cite>etl.ExtractArgs.BufferSize</cite>).</p>
+<p>There are different types of buffers available with different behaviour.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><cite>SortableSliceBuffer</cite> – just append (k, v1), (k, v2) onto a slice. Duplicate keys</dt><dd><p>will lead to duplicate entries: [(k, v1) (k, v2)].</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><cite>SortableAppendBuffer</cite> – on duplicate keys: merge. (k, v1), (k, v2)</dt><dd><p>will lead to k: [v1 v2]</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><cite>SortableOldestAppearedBuffer</cite> – on duplicate keys: keep the oldest. (k,</dt><dd><p>v1), (k v2) will lead to k: v1</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="loading-into-database">
+<h2>Loading Into Database<a class="headerlink" href="#loading-into-database" title="Permalink to this headline">¶</a></h2>
+<p>We load data from the temp files into a database in batches, limited by
+<cite>IdealBatchSize()</cite> of an <cite>ethdb.Mutation</cite>.</p>
+</div>
+<div class="section" id="saving-restoring-state">
+<h2>Saving &amp; Restoring State<a class="headerlink" href="#saving-restoring-state" title="Permalink to this headline">¶</a></h2>
+<p>Interrupting in the middle of loading can lead to inconsistent state in the
+database.</p>
+<p>To avoid that, the ETL framework allows storing progress by setting <cite>OnLoadCommit</cite> in <cite>etl.TransformArgs</cite>.</p>
+<p>Then we can use this data to know the progress the ETL transformation made.</p>
+<p>You can also specify <cite>ExtractStartKey</cite> and <cite>ExtractEndKey</cite> to limit the nubmer
+of items transformed.</p>
+</div>
+<div class="section" id="etl-transform-function">
+<h2><cite>etl.Transform</cite> function<a class="headerlink" href="#etl-transform-function" title="Permalink to this headline">¶</a></h2>
+<p>The vast majority of use-cases is when we extract data from one bucket and in
+the end, load it into another bucket. That is the use-case for <cite>etl.Transform</cite>
+function.</p>
+</div>
+<div class="section" id="etl-collector-struct">
+<h2><cite>etl.Collector</cite> struct<a class="headerlink" href="#etl-collector-struct" title="Permalink to this headline">¶</a></h2>
+<p>If you want a more modular behaviour instead of just reading from the DB (like
+generating intermediate hashes in <a class="reference external" href="https://github.com/ledgerwatch/erigon/blob/master/core/chain_makers.go">https://github.com/ledgerwatch/erigon/blob/master/core/chain_makers.go</a>, you can use
+<cite>etl.Collector</cite> struct directly.</p>
+<p>It has a <cite>.Collect()</cite> method that you can provide your data to.</p>
+</div>
+<div class="section" id="optimizations">
+<h2>Optimizations<a class="headerlink" href="#optimizations" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><dl class="simple">
+<dt>if all data fits into a single file, we don’t write anything to disk and just</dt><dd><p>use in-memory storage.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="snappy.html"
+       title="previous chapter">← Block Bodies Compression: Snappy</a>
+  </li>
+  <li class="next">
+    <a href="rpc/index.html"
+       title="next chapter">RPC Interfaces →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright &lt;a href=&#34;https://github.com/ledgerwatch&#34;&gt;Ledgerwatch&lt;/a&gt;.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

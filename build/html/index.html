@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Welcome to Erigon’s documentation!</title>
+    
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/debug.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="Installation Guide" href="installation.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="#" class="home-link">
+    
+      <span class="site-name">Erigon</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="#welcome-to-erigon-s-documentation">welcome to erigon's documentation!</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="installation.html" class="reference internal ">Installation Guide</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="types.html" class="reference internal ">Erigon Types</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="rpc/tutorial.html" class="reference internal ">Tutorial: Build a personalized daemon</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="stagedsync.html" class="reference internal ">StagedSync</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="snappy.html" class="reference internal ">Block Bodies Compression: Snappy</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="etl.html" class="reference internal ">ETL</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="rpc/index.html" class="reference internal ">RPC Interfaces</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="#">Docs</a> &raquo;</li>
+    
+    <li>Welcome to Erigon’s documentation!</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="next">
+    <a href="installation.html"
+       title="next chapter">Installation Guide →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <div class="section" id="welcome-to-erigon-s-documentation">
+<h1>Welcome to Erigon’s documentation!<a class="headerlink" href="#welcome-to-erigon-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#prerequisite">Prerequisite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#compiling">Compiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#running">Running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#rpc-daemon">RPC Daemon</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="types.html">Erigon Types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="types.html#address-and-hash">Address and Hash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html#transaction">Transaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html#block-header">Block Header</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html#block">Block</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html#account">Account</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rpc/tutorial.html">Tutorial: Build a personalized daemon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stagedsync.html">StagedSync</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="stagedsync.html#stage-1-download-block-headers">Stage 1 : Download Block Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stagedsync.html#stage-2-write-block-hashes">Stage 2 : Write Block Hashes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stagedsync.html#stage-3-download-block-bodies">Stage 3 : Download Block Bodies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="snappy.html">Block Bodies Compression: Snappy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="snappy.html#issue">Issue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snappy.html#snappy">Snappy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snappy.html#why-snappy">Why Snappy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="etl.html">ETL</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="etl.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="etl.html#data-transformation">Data Transformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="etl.html#transform-on-extraction">Transform On Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="etl.html#transform-on-loading">Transform On Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="etl.html#buffer-types">Buffer Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="etl.html#loading-into-database">Loading Into Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="etl.html#saving-restoring-state">Saving &amp; Restoring State</a></li>
+<li class="toctree-l2"><a class="reference internal" href="etl.html#etl-transform-function"><cite>etl.Transform</cite> function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="etl.html#etl-collector-struct"><cite>etl.Collector</cite> struct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="etl.html#optimizations">Optimizations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rpc/index.html">RPC Interfaces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#web3-clientversion">web3_clientVersion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#web3-sha3">web3_sha3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#net-listening">net_listening</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#net-version">net_version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#net-peercount">net_peerCount</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-getblockbynumber">eth_getBlockByNumber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-getblockbyhash">eth_getBlockByHash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-getblocktransactioncountbynumber">eth_getBlockTransactionCountByNumber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-getblocktransactioncountbyhash">eth_getBlockTransactionCountByHash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-gettransactionbyhash">eth_getTransactionByHash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-gettransactionbyblockhashandindex">eth_getTransactionByBlockHashAndIndex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-gettransactionbyblocknumberandindex">eth_getTransactionByBlockNumberAndIndex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-gettransactionreceipt">eth_getTransactionReceipt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-getunclebyblocknumberandindex">eth_getUncleByBlockNumberAndIndex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-getunclebyblockhashandindex">eth_getUncleByBlockHashAndIndex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-getunclecountbyblocknumber">eth_getUncleCountByBlockNumber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-getunclecountbyblockhash">eth_getUncleCountByBlockHash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-newpendingtransactionfilter">eth_newPendingTransactionFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-newblockfilter">eth_newBlockFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-newfilter">eth_newFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-uninstallfilter">eth_uninstallFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-getfilterchanges">eth_getFilterChanges</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-getlogs">eth_getLogs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-getbalance">eth_getBalance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-gettransactioncount">eth_getTransactionCount</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-getcode">eth_getCode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-getstorageat">eth_getStorageAt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-blocknumber">eth_blockNumber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-syncing">eth_syncing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-chainid">eth_chainId</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-protocolversion">eth_protocolVersion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-gasprice">eth_gasPrice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-call">eth_call</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-estimategas">eth_estimateGas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-sendtransaction">eth_sendTransaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-sendrawtransaction">eth_sendRawTransaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-getproof">eth_getProof</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-coinbase">eth_coinbase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-hashrate">eth_hashrate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-mining">eth_mining</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-getwork">eth_getWork</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-submitwork">eth_submitWork</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-submithashrate">eth_submitHashrate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#trace-call">trace_call</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#trace-callmany">trace_callMany</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#trace-rawtransaction">trace_rawTransaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#trace-replayblocktransactions">trace_replayBlockTransactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#trace-replaytransaction">trace_replayTransaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#trace-transaction">trace_transaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#trace-get">trace_get</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#trace-block">trace_block</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#trace-filter">trace_filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#erigon-forks">erigon_forks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#erigon-getheaderbynumber">erigon_getHeaderByNumber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#erigon-getheaderbyhash">erigon_getHeaderByHash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#erigon-getlogsbyhash">erigon_getLogsByHash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#debug-storagerangeat">debug_storageRangeAt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#debug-accountrange">debug_accountRange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#debug-getmodifiedaccountsbynumber">debug_getModifiedAccountsByNumber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#debug-getmodifiedaccountsbyhash">debug_getModifiedAccountsByHash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#debug-tracetransaction">debug_traceTransaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-accounts">eth_accounts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-getcompilers">eth_getCompilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-compilelll">eth_compileLLL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-compilesolidity">eth_compileSolidity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-compileserpent">eth_compileSerpent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#eth-sign">eth_sign</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#db-getstring">db_getString</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#db-putstring">db_putString</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#db-gethex">db_getHex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#db-puthex">db_putHex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#shh-post">shh_post</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#shh-version">shh_version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#shh-newidentity">shh_newIdentity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#shh-hasidentity">shh_hasIdentity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#shh-newgroup">shh_newGroup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#shh-addtogroup">shh_addToGroup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#shh-newfilter">shh_newFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#shh-uninstallfilter">shh_uninstallFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#shh-getfilterchanges">shh_getFilterChanges</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpc/index.html#shh-getmessages">shh_getMessages</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+<li><dl class="field-list simple">
+<dt class="field-odd">ref</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</li>
+</ul>
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="next">
+    <a href="installation.html"
+       title="next chapter">Installation Guide →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright &lt;a href=&#34;https://github.com/ledgerwatch&#34;&gt;Ledgerwatch&lt;/a&gt;.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>
